@@ -1,0 +1,24 @@
+{
+  "name": "dreamore-plus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DREAMORE+ | Lobby & Ecossistema Indie Game Dev",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./styles/main.css --minify && npx esbuild js/firebase-entry.js --bundle --format=esm --outfile=js/vendor/firebase-sdk.js --minify && node --check server.js && node --check database/database.js",
+    "lint": "npx eslint server.js database/database.js js firestore.rules"
+  },
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "@firebase/eslint-plugin-security-rules": "^0.0.2",
+    "@tailwindcss/cli": "^4.3.5",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.15.0",
+    "express": "^4.21.2",
+    "firebase": "^13.4.0",
+    "globals": "^17.14.0",
+    "tailwindcss": "^4.3.5"
+  }
+}

@@ -1,0 +1,632 @@
+{
+  "entities": {
+    "ConnectionTest": {
+      "title": "ConnectionTest",
+      "description": "Read-only health check document for verifying live Firestore connectivity.",
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "description": "Whether the connection endpoint is active."
+        }
+      },
+      "required": ["ok"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Authoritative admin membership record keyed by Firebase Auth UID.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Owner-isolated PII and account metadata for an authenticated DREAMORE+ user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 200
+        },
+        "username": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "enum": ["Visitante", "Desenvolvedor", "Administrador"],
+          "maxLength": 32
+        },
+        "provider": {
+          "type": "string",
+          "enum": ["google", "local"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "username", "name", "role", "provider", "createdAt", "updatedAt"]
+    },
+    "UserPublic": {
+      "title": "UserPublic",
+      "description": "Public developer profile visible to community members without exposing private PII.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "username": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "enum": ["Visitante", "Desenvolvedor", "Administrador"],
+          "maxLength": 32
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "site": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "photo": {
+          "type": "string",
+          "maxLength": 260000
+        },
+        "banner": {
+          "type": "string",
+          "maxLength": 300000
+        },
+        "socials": {
+          "type": "object"
+        },
+        "resume": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "skills": {
+          "type": "array"
+        },
+        "followers": {
+          "type": "array"
+        },
+        "online": {
+          "type": "boolean"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public"],
+          "maxLength": 16
+        },
+        "lastSeen": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "username", "name", "role", "visibility", "createdAt", "updatedAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Indie game project listed in the DREAMORE+ lobby and showcase.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "creator": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "icon": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "title": {
+          "type": "object"
+        },
+        "synopsis": {
+          "type": "object"
+        },
+        "genre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "year": {
+          "type": "number"
+        },
+        "releaseDate": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "progress": {
+          "type": "number"
+        },
+        "goal": {
+          "type": "number"
+        },
+        "donated": {
+          "type": "number"
+        },
+        "likes": {
+          "type": "number"
+        },
+        "favorites": {
+          "type": "number"
+        },
+        "ageRating": {
+          "type": "string",
+          "enum": ["Livre", "+13", "+16", "+18"],
+          "maxLength": 12
+        },
+        "ageDetails": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "colors": {
+          "type": "array"
+        },
+        "cover": {
+          "type": "string",
+          "maxLength": 300000
+        },
+        "gallery": {
+          "type": "array"
+        },
+        "playableDemo": {
+          "type": "object"
+        },
+        "team": {
+          "type": "array"
+        },
+        "comments": {
+          "type": "array"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "ownerId", "creator", "title", "synopsis", "genre", "progress", "goal", "ageRating", "visibility", "createdAt", "updatedAt"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Recruitment application and resume submitted to join a project team.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectOwnerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "applicantUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "applicant": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "experienceLevel": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "availability": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "resume": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 2000
+        },
+        "portfolio": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "skills": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "accepted", "rejected"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "projectId", "projectOwnerId", "applicantUid", "applicant", "role", "resume", "status", "createdAt", "updatedAt"]
+    },
+    "FeedPost": {
+      "title": "FeedPost",
+      "description": "Community development progress post with milestone tag and optional media.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "projectId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "projectTitle": {
+          "type": "string",
+          "maxLength": 140
+        },
+        "tag": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "milestone": {
+          "type": "string",
+          "maxLength": 140
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "image": {
+          "type": "string",
+          "maxLength": 300000
+        },
+        "likes": {
+          "type": "number"
+        },
+        "comments": {
+          "type": "array"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "authorUid", "author", "content", "visibility", "createdAt", "updatedAt"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Collaborative studio/community group with custom photo, description, members, and moderators.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "desc": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "photo": {
+          "type": "string",
+          "maxLength": 260000
+        },
+        "ownerUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "moderatorUids": {
+          "type": "array"
+        },
+        "moderators": {
+          "type": "array"
+        },
+        "memberUids": {
+          "type": "array"
+        },
+        "members": {
+          "type": "array"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "private"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "name", "ownerUid", "owner", "moderatorUids", "moderators", "memberUids", "members", "visibility", "createdAt", "updatedAt"]
+    },
+    "GroupMessage": {
+      "title": "GroupMessage",
+      "description": "Chat message inside a collaborative group.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 1500
+        },
+        "attachment": {
+          "type": "object"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "private"],
+          "maxLength": 16
+        },
+        "memberUids": {
+          "type": "array"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "authorUid", "user", "visibility", "memberUids", "createdAt"]
+    },
+    "ChannelMessage": {
+      "title": "ChannelMessage",
+      "description": "Message inside a public community channel or mentor chat.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "authorUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 1500
+        },
+        "attachment": {
+          "type": "object"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public"],
+          "maxLength": 16
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "channelId", "authorUid", "user", "visibility", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/test/connection": {
+      "schema": { "$ref": "#/entities/ConnectionTest" },
+      "description": "Server connection probe document for validating live Firestore setup."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Authoritative admin UID registry."
+    },
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserPrivate" },
+      "description": "Owner-only private user account data containing email PII."
+    },
+    "/users_public/{uid}": {
+      "schema": { "$ref": "#/entities/UserPublic" },
+      "description": "Public developer profile with avatar photo, banner, socials, and follower count."
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Indie game projects created and updated by developers."
+    },
+    "/projects/{projectId}/applications/{appId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Team recruitment applications scoped to a parent project."
+    },
+    "/feed_posts/{postId}": {
+      "schema": { "$ref": "#/entities/FeedPost" },
+      "description": "Community feed updates and milestone posts."
+    },
+    "/groups/{groupId}": {
+      "schema": { "$ref": "#/entities/Group" },
+      "description": "Community and studio chat groups with photo, description, members, and moderators."
+    },
+    "/groups/{groupId}/messages/{msgId}": {
+      "schema": { "$ref": "#/entities/GroupMessage" },
+      "description": "Messages inside a group gated by parent group membership."
+    },
+    "/channels/{channelId}/messages/{msgId}": {
+      "schema": { "$ref": "#/entities/ChannelMessage" },
+      "description": "Messages inside public community chat channels."
+    }
+  }
+}

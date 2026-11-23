@@ -1,0 +1,481 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ---------- Global Primitives & Identity Helpers ----------
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'carloskopvicz@gmail.com'
+      );
+    }
+
+    function isValidOptionalString(data, field, maxLen) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    function isValidBoundedStringList(arr, maxItems) {
+      return arr is list && arr.size() <= maxItems && (arr.size() == 0 || arr[0] is string);
+    }
+
+    function isValidBoundedMapList(arr, maxItems) {
+      return arr is list && arr.size() <= maxItems && (arr.size() == 0 || arr[0] is map);
+    }
+
+    // ---------- Entity Validation Blueprints ----------
+    function isValidUserPrivate(data, uid) {
+      return data.keys().hasAll(['uid', 'email', 'username', 'name', 'role', 'provider', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'email', 'username', 'name', 'role', 'provider', 'createdAt', 'updatedAt'])
+        && data.uid is string && data.uid == uid && isValidId(data.uid)
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 200
+        && data.username is string && data.username.size() >= 2 && data.username.size() <= 64
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 80
+        && data.role is string && data.role.size() <= 32
+        && (data.role in ['Visitante', 'Desenvolvedor'] || isAdmin())
+        && data.provider is string && data.provider in ['google', 'local'] && data.provider.size() <= 16
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidUserPublic(data, uid) {
+      return data.keys().hasAll(['uid', 'username', 'name', 'role', 'visibility', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'uid', 'username', 'name', 'role', 'bio', 'location', 'site', 'photo',
+          'banner', 'socials', 'resume', 'skills', 'followers', 'online',
+          'visibility', 'lastSeen', 'createdAt', 'updatedAt'
+        ])
+        && data.uid is string && data.uid == uid && isValidId(data.uid)
+        && data.username is string && data.username.size() >= 2 && data.username.size() <= 64
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 80
+        && data.role is string && data.role.size() <= 32
+        && (data.role in ['Visitante', 'Desenvolvedor'] || isAdmin())
+        && data.visibility == 'public'
+        && isValidOptionalString(data, 'bio', 600)
+        && isValidOptionalString(data, 'location', 100)
+        && isValidOptionalString(data, 'site', 300)
+        && isValidOptionalString(data, 'photo', 260000)
+        && isValidOptionalString(data, 'banner', 300000)
+        && isValidOptionalString(data, 'resume', 2000)
+        && (!('socials' in data) || data.socials is map)
+        && (!('skills' in data) || isValidBoundedStringList(data.skills, 30))
+        && (!('followers' in data) || isValidBoundedStringList(data.followers, 500))
+        && (!('online' in data) || data.online is bool)
+        && (!('lastSeen' in data) || data.lastSeen is number)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidProject(data, projectId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'creator', 'title', 'synopsis', 'genre',
+          'progress', 'goal', 'ageRating', 'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerId', 'creator', 'icon', 'title', 'synopsis', 'genre', 'year',
+          'releaseDate', 'progress', 'goal', 'donated', 'likes', 'favorites',
+          'ageRating', 'ageDetails', 'colors', 'cover', 'gallery', 'playableDemo',
+          'team', 'comments', 'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == projectId && isValidId(data.id)
+        && data.ownerId is string && isValidId(data.ownerId)
+        && data.creator is string && data.creator.size() >= 1 && data.creator.size() <= 80
+        && isValidOptionalString(data, 'icon', 32)
+        && data.title is map
+        && data.synopsis is map
+        && data.genre is string && data.genre.size() >= 1 && data.genre.size() <= 80
+        && (!('year' in data) || data.year is number)
+        && isValidOptionalString(data, 'releaseDate', 20)
+        && data.progress is number && data.progress >= 0 && data.progress <= 100
+        && data.goal is number && data.goal >= 100
+        && (!('donated' in data) || (data.donated is number && data.donated >= 0))
+        && (!('likes' in data) || (data.likes is number && data.likes >= 0))
+        && (!('favorites' in data) || (data.favorites is number && data.favorites >= 0))
+        && data.ageRating is string && data.ageRating in ['Livre', '+13', '+16', '+18'] && data.ageRating.size() <= 12
+        && isValidOptionalString(data, 'ageDetails', 400)
+        && (!('colors' in data) || isValidBoundedStringList(data.colors, 4))
+        && isValidOptionalString(data, 'cover', 300000)
+        && (!('gallery' in data) || isValidBoundedStringList(data.gallery, 12))
+        && (!('playableDemo' in data) || data.playableDemo is map)
+        && (!('team' in data) || isValidBoundedMapList(data.team, 40))
+        && (!('comments' in data) || isValidBoundedMapList(data.comments, 200))
+        && data.visibility == 'public'
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidApplication(data, projectId, appId) {
+      return data.keys().hasAll([
+          'id', 'projectId', 'projectOwnerId', 'applicantUid', 'applicant', 'role', 'resume', 'status', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'projectId', 'projectOwnerId', 'applicantUid', 'applicant', 'username', 'role',
+          'experienceLevel', 'availability', 'resume', 'portfolio', 'skills',
+          'status', 'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == appId && isValidId(data.id)
+        && data.projectId is string && data.projectId == projectId && isValidId(data.projectId)
+        && data.projectOwnerId is string && isValidId(data.projectOwnerId)
+        && data.applicantUid is string && isValidId(data.applicantUid)
+        && data.applicant is string && data.applicant.size() >= 1 && data.applicant.size() <= 80
+        && isValidOptionalString(data, 'username', 64)
+        && data.role is string && data.role.size() >= 1 && data.role.size() <= 80
+        && isValidOptionalString(data, 'experienceLevel', 60)
+        && isValidOptionalString(data, 'availability', 80)
+        && data.resume is string && data.resume.size() >= 10 && data.resume.size() <= 2000
+        && isValidOptionalString(data, 'portfolio', 300)
+        && isValidOptionalString(data, 'skills', 400)
+        && data.status is string && data.status in ['pending', 'accepted', 'rejected'] && data.status.size() <= 16
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidFeedPost(data, postId) {
+      return data.keys().hasAll([
+          'id', 'authorUid', 'author', 'content', 'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'authorUid', 'author', 'username', 'role', 'projectId', 'projectTitle',
+          'tag', 'milestone', 'content', 'image', 'likes', 'comments',
+          'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == postId && isValidId(data.id)
+        && data.authorUid is string && isValidId(data.authorUid)
+        && data.author is string && data.author.size() >= 1 && data.author.size() <= 80
+        && isValidOptionalString(data, 'username', 64)
+        && isValidOptionalString(data, 'role', 32)
+        && isValidOptionalString(data, 'projectId', 128)
+        && isValidOptionalString(data, 'projectTitle', 140)
+        && isValidOptionalString(data, 'tag', 40)
+        && isValidOptionalString(data, 'milestone', 140)
+        && data.content is string && data.content.size() >= 1 && data.content.size() <= 2000
+        && isValidOptionalString(data, 'image', 300000)
+        && (!('likes' in data) || (data.likes is number && data.likes >= 0))
+        && (!('comments' in data) || isValidBoundedMapList(data.comments, 200))
+        && data.visibility == 'public'
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidGroup(data, groupId) {
+      return data.keys().hasAll([
+          'id', 'name', 'ownerUid', 'owner', 'moderatorUids', 'moderators',
+          'memberUids', 'members', 'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'name', 'desc', 'photo', 'ownerUid', 'owner',
+          'moderatorUids', 'moderators', 'memberUids', 'members',
+          'visibility', 'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == groupId && isValidId(data.id)
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 60
+        && isValidOptionalString(data, 'desc', 300)
+        && isValidOptionalString(data, 'photo', 260000)
+        && data.ownerUid is string && isValidId(data.ownerUid)
+        && data.owner is string && data.owner.size() >= 1 && data.owner.size() <= 64
+        && isValidBoundedStringList(data.moderatorUids, 25)
+        && isValidBoundedStringList(data.moderators, 25)
+        && isValidBoundedStringList(data.memberUids, 100)
+        && isValidBoundedStringList(data.members, 100)
+        && data.visibility is string && data.visibility in ['public', 'private'] && data.visibility.size() <= 16
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidGroupMessage(data, msgId) {
+      return data.keys().hasAll(['id', 'authorUid', 'user', 'visibility', 'memberUids', 'createdAt'])
+        && data.keys().hasOnly(['id', 'authorUid', 'user', 'role', 'text', 'attachment', 'visibility', 'memberUids', 'createdAt'])
+        && data.id is string && data.id == msgId && isValidId(data.id)
+        && data.authorUid is string && isValidId(data.authorUid)
+        && data.user is string && data.user.size() >= 1 && data.user.size() <= 80
+        && isValidOptionalString(data, 'role', 32)
+        && isValidOptionalString(data, 'text', 1500)
+        && (!('attachment' in data) || data.attachment is map)
+        && data.visibility is string && data.visibility in ['public', 'private'] && data.visibility.size() <= 16
+        && isValidBoundedStringList(data.memberUids, 100)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidChannelMessage(data, channelId, msgId) {
+      return data.keys().hasAll(['id', 'channelId', 'authorUid', 'user', 'visibility', 'createdAt'])
+        && data.keys().hasOnly(['id', 'channelId', 'authorUid', 'user', 'role', 'text', 'attachment', 'visibility', 'createdAt'])
+        && data.id is string && data.id == msgId && isValidId(data.id)
+        && data.channelId is string && data.channelId == channelId && data.channelId.size() <= 128
+        && data.authorUid is string && isValidId(data.authorUid)
+        && data.user is string && data.user.size() >= 1 && data.user.size() <= 80
+        && isValidOptionalString(data, 'role', 40)
+        && isValidOptionalString(data, 'text', 1500)
+        && (!('attachment' in data) || data.attachment is map)
+        && data.visibility == 'public'
+        && data.createdAt is timestamp;
+    }
+
+    // ---------- Connection Probe ----------
+    match /test/connection {
+      allow get: if true;
+      allow list, write: if false;
+    }
+
+    // ---------- Admin Registry ----------
+    match /admins/{uid} {
+      allow get: if isValidId(uid) && isSignedIn() && (isOwner(uid) || isAdmin());
+      allow list: if isAdmin();
+      allow create, update, delete: if isValidId(uid) && isAdmin();
+    }
+
+    // ---------- Private User Accounts (PII: Email) ----------
+    match /users/{uid} {
+      allow get: if isValidId(uid) && isSignedIn() && (isOwner(uid) || isAdmin());
+      allow list: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+      allow create: if isValidId(uid) && isVerifiedUser()
+        && isOwner(uid)
+        && isValidUserPrivate(incoming(), uid)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(uid) && isVerifiedUser()
+        && isValidUserPrivate(incoming(), uid)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'username', 'role', 'email', 'updatedAt'])) ||
+          (isOwner(uid) && incoming().role == existing().role && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'username', 'email', 'updatedAt']))
+        );
+      allow delete: if isValidId(uid) && isAdmin();
+    }
+
+    // ---------- Public Developer Profiles (Zero PII) ----------
+    match /users_public/{uid} {
+      allow get: if isValidId(uid) && isSignedIn() && (existing().visibility == 'public' || isOwner(uid) || isAdmin());
+      allow list: if isSignedIn() && (resource.data.visibility == 'public' || resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isValidId(uid) && isVerifiedUser()
+        && isOwner(uid)
+        && isValidUserPublic(incoming(), uid)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(uid) && isVerifiedUser()
+        && isValidUserPublic(incoming(), uid)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() ||
+          (isOwner(uid) && incoming().role == existing().role && incoming().diff(existing()).affectedKeys().hasOnly([
+            'username', 'name', 'bio', 'location', 'site', 'photo', 'banner',
+            'socials', 'resume', 'skills', 'online', 'lastSeen', 'updatedAt'
+          ])) ||
+          (isOwner(uid) && incoming().role in ['Visitante', 'Desenvolvedor'] && incoming().diff(existing()).affectedKeys().hasOnly([
+            'role', 'updatedAt'
+          ])) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['followers', 'updatedAt']))
+        );
+      allow delete: if isValidId(uid) && isAdmin();
+    }
+
+    // ---------- Projects & Master-Gated Team Applications ----------
+    match /projects/{projectId} {
+      allow get: if isValidId(projectId) && isSignedIn() && (existing().visibility == 'public' || existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.visibility == 'public' || resource.data.ownerId == request.auth.uid || isAdmin());
+      allow create: if isValidId(projectId) && isVerifiedUser()
+        && isValidProject(incoming(), projectId)
+        && (incoming().ownerId == request.auth.uid || isAdmin())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(projectId) && isVerifiedUser()
+        && isValidProject(incoming(), projectId)
+        && incoming().id == existing().id
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly([
+            'creator', 'icon', 'title', 'synopsis', 'genre', 'year', 'releaseDate',
+            'progress', 'goal', 'ageRating', 'ageDetails', 'colors', 'cover',
+            'gallery', 'playableDemo', 'team', 'updatedAt'
+          ])) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['likes', 'favorites', 'comments', 'donated', 'updatedAt']))
+        );
+      allow delete: if isValidId(projectId) && isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+
+      // Subcollection Master Gate referencing /projects/{projectId}
+      match /applications/{appId} {
+        allow get: if isValidId(projectId) && isValidId(appId) && isSignedIn() && (
+          existing().applicantUid == request.auth.uid ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.ownerId == request.auth.uid ||
+          isAdmin()
+        );
+        allow list: if isSignedIn() && (
+          resource.data.applicantUid == request.auth.uid ||
+          resource.data.projectOwnerId == request.auth.uid ||
+          isAdmin()
+        );
+        allow create: if isValidId(projectId) && isValidId(appId) && isVerifiedUser()
+          && isValidApplication(incoming(), projectId, appId)
+          && incoming().applicantUid == request.auth.uid
+          && incoming().status == 'pending'
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/projects/$(projectId))
+          && incoming().projectOwnerId == get(/databases/$(database)/documents/projects/$(projectId)).data.ownerId;
+        allow update: if isValidId(projectId) && isValidId(appId) && isVerifiedUser()
+          && isValidApplication(incoming(), projectId, appId)
+          && incoming().id == existing().id
+          && incoming().projectId == existing().projectId
+          && incoming().projectOwnerId == existing().projectOwnerId
+          && incoming().applicantUid == existing().applicantUid
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && (
+            isAdmin() ||
+            (
+              existing().status == 'pending' &&
+              incoming().status in ['accepted', 'rejected'] &&
+              incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) &&
+              get(/databases/$(database)/documents/projects/$(projectId)).data.ownerId == request.auth.uid
+            )
+          );
+        allow delete: if isValidId(projectId) && isValidId(appId) && isVerifiedUser() && (existing().applicantUid == request.auth.uid || isAdmin());
+      }
+    }
+
+    // ---------- Community Feed Posts ----------
+    match /feed_posts/{postId} {
+      allow get: if isValidId(postId) && isSignedIn() && (existing().visibility == 'public' || existing().authorUid == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.visibility == 'public' || resource.data.authorUid == request.auth.uid || isAdmin());
+      allow create: if isValidId(postId) && isVerifiedUser()
+        && isValidFeedPost(incoming(), postId)
+        && (incoming().authorUid == request.auth.uid || isAdmin())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(postId) && isVerifiedUser()
+        && isValidFeedPost(incoming(), postId)
+        && incoming().id == existing().id
+        && incoming().authorUid == existing().authorUid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() ||
+          (existing().authorUid == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly([
+            'tag', 'milestone', 'content', 'image', 'projectId', 'projectTitle', 'updatedAt'
+          ])) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['likes', 'comments', 'updatedAt']))
+        );
+      allow delete: if isValidId(postId) && isVerifiedUser() && (existing().authorUid == request.auth.uid || isAdmin());
+    }
+
+    // ---------- Collaborative Groups (Photo, Description, Members, Moderators) ----------
+    match /groups/{groupId} {
+      allow get: if isValidId(groupId) && isSignedIn() && (
+        existing().visibility == 'public' ||
+        existing().ownerUid == request.auth.uid ||
+        request.auth.uid in existing().memberUids ||
+        request.auth.uid in existing().moderatorUids ||
+        isAdmin()
+      );
+      allow list: if isSignedIn() && (
+        resource.data.visibility == 'public' ||
+        resource.data.ownerUid == request.auth.uid ||
+        request.auth.uid in resource.data.memberUids ||
+        isAdmin()
+      );
+      allow create: if isValidId(groupId) && isVerifiedUser()
+        && isValidGroup(incoming(), groupId)
+        && (incoming().ownerUid == request.auth.uid || isAdmin())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(groupId) && isVerifiedUser()
+        && isValidGroup(incoming(), groupId)
+        && incoming().id == existing().id
+        && incoming().ownerUid == existing().ownerUid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() ||
+          (
+            (existing().ownerUid == request.auth.uid || request.auth.uid in existing().moderatorUids) &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'name', 'desc', 'photo', 'moderatorUids', 'moderators', 'memberUids', 'members', 'visibility', 'updatedAt'
+            ])
+          ) ||
+          (
+            existing().visibility == 'public' &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['memberUids', 'members', 'updatedAt'])
+          )
+        );
+      allow delete: if isValidId(groupId) && isVerifiedUser() && (existing().ownerUid == request.auth.uid || isAdmin());
+
+      // Group Chat Messages (Master Gate referencing /groups/{groupId})
+      match /messages/{msgId} {
+        allow get: if isValidId(groupId) && isValidId(msgId) && isSignedIn() && (
+          get(/databases/$(database)/documents/groups/$(groupId)).data.visibility == 'public' ||
+          get(/databases/$(database)/documents/groups/$(groupId)).data.ownerUid == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberUids ||
+          isAdmin()
+        );
+        allow list: if isSignedIn() && (
+          resource.data.visibility == 'public' ||
+          resource.data.authorUid == request.auth.uid ||
+          request.auth.uid in resource.data.memberUids ||
+          isAdmin()
+        );
+        allow create: if isValidId(groupId) && isValidId(msgId) && isVerifiedUser()
+          && isValidGroupMessage(incoming(), msgId)
+          && incoming().authorUid == request.auth.uid
+          && incoming().createdAt == request.time
+          && exists(/databases/$(database)/documents/groups/$(groupId))
+          && incoming().visibility == get(/databases/$(database)/documents/groups/$(groupId)).data.visibility
+          && (
+            get(/databases/$(database)/documents/groups/$(groupId)).data.visibility == 'public' ||
+            get(/databases/$(database)/documents/groups/$(groupId)).data.ownerUid == request.auth.uid ||
+            request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberUids
+          );
+        allow delete: if isValidId(groupId) && isValidId(msgId) && isVerifiedUser() && (
+          existing().authorUid == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.moderatorUids ||
+          get(/databases/$(database)/documents/groups/$(groupId)).data.ownerUid == request.auth.uid ||
+          isAdmin()
+        );
+      }
+    }
+
+    // ---------- Public Community Channels ----------
+    match /channels/{channelId}/messages/{msgId} {
+      allow get: if isValidId(channelId) && isValidId(msgId) && isSignedIn() && existing().visibility == 'public';
+      allow list: if isSignedIn() && resource.data.visibility == 'public';
+      allow create: if isValidId(channelId) && isValidId(msgId) && isVerifiedUser()
+        && isValidChannelMessage(incoming(), channelId, msgId)
+        && incoming().authorUid == request.auth.uid
+        && incoming().createdAt == request.time;
+      allow delete: if isValidId(channelId) && isValidId(msgId) && isVerifiedUser() && (existing().authorUid == request.auth.uid || isAdmin());
+    }
+  }
+}
