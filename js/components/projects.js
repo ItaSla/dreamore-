@@ -144,7 +144,7 @@ export function renderLobbyView() {
         </div>
 
         <div class="lg:col-span-5 relative min-h-[240px] bg-slate-900">
-          <img src="/src/assets/images/hero_indie_studio_1795401148551.jpg" alt="Estúdio independente DREAMORE+" referrerPolicy="no-referrer"
+          <img src="./assets/art/studio-banner.svg" alt="Estúdio independente DREAMORE+" referrerPolicy="no-referrer"
             class="w-full h-full object-cover" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
           <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2 text-white">

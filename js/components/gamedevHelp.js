@@ -22,7 +22,7 @@ export function renderGameDevHelpView() {
           </p>
         </div>
         <div class="lg:col-span-4 min-h-[160px] bg-slate-900 relative">
-          <img src="/src/assets/images/banner_pixel_workshop_1795401149532.jpg" alt="Academia Pixel Art & GameDev" referrerPolicy="no-referrer" class="w-full h-full object-cover" />
+          <img src="./assets/art/pixel-workshop.svg" alt="Academia Pixel Art & GameDev" referrerPolicy="no-referrer" class="w-full h-full object-cover" />
         </div>
       </section>
 

@@ -47,7 +47,7 @@ export function renderFeedView() {
             class="w-full px-3.5 py-2.5 rounded-xl dm-surface-alt text-sm"></textarea>
 
           <div id="feed-image-preview-wrap" class="hidden relative">
-            <img id="feed-image-preview" src="" alt="Prévia da imagem" class="w-full max-h-64 object-cover rounded-xl border border-slate-200 dark:border-slate-800" />
+            <div id="feed-image-preview-slot"></div>
             <button type="button" data-action="clear-feed-img" aria-label="Remover imagem"
               class="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 text-white hover:bg-black">
               ${icon("close", 14)}

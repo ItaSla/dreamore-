@@ -267,22 +267,23 @@ export function renderSidebar() {
     state.page === id || (id === "lobby" && state.page === "project-detail");
 
   return `
-    ${state.mobileSidebarOpen ? `<div data-action="close-mobile-sidebar" class="fixed inset-0 z-30 bg-black/50 lg:hidden"></div>` : ""}
+    <div id="mobile-sidebar-backdrop" data-action="close-mobile-sidebar" aria-hidden="${!state.mobileSidebarOpen}"
+      class="fixed inset-0 z-30 bg-black/50 backdrop-blur-[2px] lg:hidden transition-opacity duration-300 ${state.mobileSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}"></div>
     <aside id="app-sidebar" aria-label="Menu principal"
-      class="dm-sidebar ${collapsed ? "is-collapsed" : ""} fixed lg:sticky top-0 left-0 z-40 h-screen dm-surface border-r flex flex-col justify-between shrink-0 ${state.mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}">
+      class="dm-sidebar ${collapsed ? "is-collapsed" : ""} fixed lg:sticky top-0 left-0 z-40 h-screen dm-surface border-r flex flex-col justify-between shrink-0 ${state.mobileSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}">
       <div class="flex flex-col min-h-0 flex-1">
         <!-- Brand Header + Collapse Toggle -->
-        <div class="h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
-          <button type="button" data-action="nav" data-page="lobby" class="flex items-center gap-3 min-w-0 text-left">
+        <div class="dm-sidebar-header h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
+          <button type="button" data-action="nav" data-page="lobby" class="dm-brand-btn flex items-center gap-3 min-w-0 text-left">
             <span class="w-9 h-9 rounded-xl bg-indigo-600 text-white font-display font-bold text-sm inline-flex items-center justify-center shrink-0">D+</span>
             <div class="dm-brand-sub min-w-0">
               <div class="font-display font-bold text-base leading-none truncate">DREAMORE+</div>
               <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 truncate">${getText(l, "brand_sub")}</div>
             </div>
           </button>
-          <button type="button" data-action="toggle-sidebar-collapse" aria-label="${collapsed ? "Abrir barra lateral" : "Recolher barra lateral"}"
-            class="hidden lg:inline-flex p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400">
-            ${collapsed ? icon("chevronRight", 18) : icon("chevronLeft", 18)}
+          <button id="sidebar-collapse-btn" type="button" data-action="toggle-sidebar-collapse" aria-label="${collapsed ? "Abrir barra lateral" : "Recolher barra lateral"}"
+            class="hidden lg:inline-flex p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}">
+            ${icon("chevronLeft", 18)}
           </button>
           <button type="button" data-action="close-mobile-sidebar" aria-label="Fechar menu"
             class="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
@@ -315,8 +316,8 @@ export function renderSidebar() {
       </div>
 
       <!-- Account Footer with Online/Offline Status -->
-      <div class="p-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
-        <button type="button" data-action="nav" data-page="profile" class="flex items-center gap-2.5 min-w-0 text-left flex-1">
+      <div class="dm-sidebar-footer p-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
+        <button type="button" data-action="nav" data-page="profile" class="dm-user-btn flex items-center gap-2.5 min-w-0 text-left flex-1">
           ${avatarHtml(u, "w-9 h-9 text-xs")}
           <div class="dm-user-meta min-w-0">
             <div class="text-sm font-semibold truncate">${escapeHtml(u.name || u.username)}</div>

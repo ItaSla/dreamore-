@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 2,
-    "visitsCount": 1507,
+    "visitsCount": 1517,
     "createdAt": "2026-11-23T02:40:50.037Z"
   },
   "genres": [
@@ -46,10 +46,10 @@
     "Jogos Incrementais"
   ],
   "defaultBanners": [
-    "/src/assets/images/hero_indie_studio_1795401148551.jpg",
-    "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
-    "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
-    "/src/assets/images/banner_pixel_workshop_1795401149532.jpg"
+    "./assets/art/studio-banner.svg",
+    "./assets/art/cyberpunk-skyline.svg",
+    "./assets/art/folklore-eclipse.svg",
+    "./assets/art/pixel-workshop.svg"
   ],
   "users": [
     {
@@ -62,7 +62,7 @@
       "location": "São Paulo, Brasil",
       "site": "https://dreamore.dev",
       "photo": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2296%22%20height%3D%2296%22%3E%3Crect%20width%3D%2296%22%20height%3D%2296%22%20fill%3D%22%236366f1%22%2F%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2236%22%20r%3D%2216%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M20%2082c4-16%2052-16%2056%200%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E",
-      "banner": "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+      "banner": "./assets/art/studio-banner.svg",
       "provider": "google",
       "pwHash": "1a74e787820e266f7a027a2fe3290c890ac0fdb2d1e1039bc1035d317c990ca0",
       "socials": {
@@ -86,7 +86,7 @@
         "CauaMaxakali"
       ],
       "online": true,
-      "lastSeen": 1795404524344
+      "lastSeen": 1795406023854
     },
     {
       "id": "usr-joao",
@@ -98,7 +98,7 @@
       "location": "Brasil",
       "site": "https://dreamore.dev",
       "photo": "",
-      "banner": "/src/assets/images/banner_pixel_workshop_1795401149532.jpg",
+      "banner": "./assets/art/pixel-workshop.svg",
       "provider": "local",
       "pwHash": "1a74e787820e266f7a027a2fe3290c890ac0fdb2d1e1039bc1035d317c990ca0",
       "socials": {
@@ -130,7 +130,7 @@
       "location": "Belo Horizonte, MG",
       "site": "",
       "photo": "",
-      "banner": "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      "banner": "./assets/art/cyberpunk-skyline.svg",
       "provider": "local",
       "pwHash": "1a74e787820e266f7a027a2fe3290c890ac0fdb2d1e1039bc1035d317c990ca0",
       "socials": {
@@ -160,7 +160,7 @@
       "location": "Minas Gerais, Brasil",
       "site": "",
       "photo": "",
-      "banner": "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      "banner": "./assets/art/folklore-eclipse.svg",
       "provider": "local",
       "pwHash": "1a74e787820e266f7a027a2fe3290c890ac0fdb2d1e1039bc1035d317c990ca0",
       "socials": {
@@ -201,7 +201,7 @@
         "#1e1b4b",
         "#be123c"
       ],
-      "cover": "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      "cover": "./assets/art/cyberpunk-skyline.svg",
       "synopsis": {
         "pt": "Após passar por diversos eventos envolvendo fantasmas do passado, Túlio Parker deve enfrentar novos inimigos para manter a paz entre o Delta e a Terra, confrontando o Deltériano Maximus.",
         "en": "After going through several events involving ghosts from the past, Túlio Parker must face new enemies to maintain peace between Delta and Earth, confronting the Delterian Maximus.",
@@ -241,7 +241,7 @@
       "icon": "bolt",
       "releaseDate": "2029-09-15",
       "gallery": [
-        "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg"
+        "./assets/art/cyberpunk-skyline.svg"
       ]
     },
     {
@@ -265,11 +265,11 @@
         "#064e3b",
         "#16a34a"
       ],
-      "cover": "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
+      "cover": "./assets/art/beatemup-arcade.svg",
       "playableDemo": {
         "title": "Edd Contra o Mundo",
         "ver": "Demo 0.1",
-        "file": "/edd_contra_o_mundo.html"
+        "file": "./edd_contra_o_mundo.html"
       },
       "synopsis": {
         "pt": "Após se revoltar com o fim do refrigerante de Bacon, Edd finalmente começa o seu plano de conclusão contra o Mundo: se ele não puder ser feliz, ninguém será.",
@@ -304,7 +304,7 @@
       "icon": "gamepad",
       "releaseDate": "2027-06-20",
       "gallery": [
-        "/src/assets/images/cover_beatemup_hero_1795401149084.jpg"
+        "./assets/art/beatemup-arcade.svg"
       ]
     },
     {
@@ -328,7 +328,7 @@
         "#3f1d0b",
         "#ea580c"
       ],
-      "cover": "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      "cover": "./assets/art/folklore-eclipse.svg",
       "synopsis": {
         "pt": "O mundo caiu em desgraça após o eclipse que dividiu a América do Sul em 13 ilhas ao redor de um vulcão ancestral, despertando criaturas do folclore em formas monstruosas.",
         "en": "The world fell into ruin after an eclipse split South America into 13 islands around an ancient volcano, awakening folklore creatures in monstrous forms.",
@@ -362,7 +362,7 @@
       "icon": "flame",
       "releaseDate": "2030-10-31",
       "gallery": [
-        "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg"
+        "./assets/art/folklore-eclipse.svg"
       ]
     },
     {
@@ -386,7 +386,7 @@
         "#090d16",
         "#334155"
       ],
-      "cover": "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      "cover": "./assets/art/cyberpunk-skyline.svg",
       "synopsis": {
         "pt": "Alterne entre a Gotham clássica e a Neo-Gotham futurista neste Metroidvania interconectado repleto de gadgets, investigação e chefes icônicos.",
         "en": "Switch between classic Gotham and futuristic Neo-Gotham in this interconnected Metroidvania packed with gadgets, detective work, and iconic bosses.",
@@ -408,7 +408,7 @@
       "icon": "shield",
       "releaseDate": "2031-03-22",
       "gallery": [
-        "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg"
+        "./assets/art/cyberpunk-skyline.svg"
       ]
     },
     {
@@ -726,7 +726,7 @@
       "tag": "Build Jogável",
       "milestone": "Demo 0.1 liberada no navegador",
       "content": "Acabamos de publicar a primeira versão jogável de Edd Contra o Mundo direto no navegador! Todo o traço foi animado quadro a quadro pela equipe, sem nenhum uso de IA generativa. Testem os combos e mandem feedback nos comentários.",
-      "image": "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
+      "image": "./assets/art/beatemup-arcade.svg",
       "likes": 64,
       "comments": [
         {
@@ -747,7 +747,7 @@
       "tag": "Arte & Atmosfera",
       "milestone": "Iluminação do Eclipse Solar nas 13 Ilhas",
       "content": "Finalizamos o conceito visual principal do vulcão central e das 13 ilhas flutuantes sob o eclipse. Também concluímos as gravações de percussão orgânica na mata para a trilha dinâmica.",
-      "image": "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      "image": "./assets/art/folklore-eclipse.svg",
       "likes": 88,
       "comments": [],
       "createdAt": "2026-11-20T18:10:00.000Z"
@@ -762,7 +762,7 @@
       "tag": "Progresso Técnico",
       "milestone": "Física de balanço vertical e tilemap noturno",
       "content": "Prototipamos o novo deslocamento pelos telhados de Delta com transição de câmera suave em 60fps. Buscamos mais um Sound Designer para os impactos dimensionais!",
-      "image": "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      "image": "./assets/art/cyberpunk-skyline.svg",
       "likes": 53,
       "comments": [
         {
@@ -783,7 +783,7 @@
       "tag": "Atualização",
       "milestone": "Nova identidade visual, Feed Unificado & Academia GameDev",
       "content": "Seja bem-vindo à nova fase da DREAMORE+! Substituímos os antigos devlogs isolados por este Feed contínuo para você acompanhar avanços em imagens e builds, além do novo menu Ajuda a GameDevs com mentorias reais.",
-      "image": "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+      "image": "./assets/art/studio-banner.svg",
       "likes": 112,
       "comments": [],
       "createdAt": "2026-11-22T09:00:00.000Z"
@@ -956,7 +956,7 @@
         "duration": "24:15",
         "level": "Iniciante",
         "topic": "Gameplay & Colisão",
-        "thumbnail": "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
+        "thumbnail": "./assets/art/beatemup-arcade.svg",
         "description": "Passo a passo construindo loop de animação, caixas de colisão AABB, knockback e efeitos visuais de impacto.",
         "chapters": [
           "00:00 Loop 60fps",
@@ -972,7 +972,7 @@
         "duration": "31:40",
         "level": "Intermediário",
         "topic": "Direção de Arte",
-        "thumbnail": "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+        "thumbnail": "./assets/art/folklore-eclipse.svg",
         "description": "Como guiar o olhar do jogador usando contraste cromático, camadas de parallax e sons orgânicos sem tutoriais invasivos.",
         "chapters": [
           "00:00 Contraste de Valores",
@@ -987,7 +987,7 @@
         "duration": "19:50",
         "level": "Todos os Níveis",
         "topic": "UX & Acessibilidade",
-        "thumbnail": "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+        "thumbnail": "./assets/art/studio-banner.svg",
         "description": "Como projetar menus responsivos, suporte a daltonismo, legendas configuráveis e navegação completa por teclado/gamepad.",
         "chapters": [
           "00:00 Hierarquia no HUD",

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="wbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <pattern id="px" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(165,180,252,0.1)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="960" height="540" fill="url(#wbg)"/>
+  <rect width="960" height="540" fill="url(#px)"/>
+  <!-- Pixel Art Canvas Frame -->
+  <rect x="110" y="72" width="540" height="396" rx="16" fill="#0f172a" stroke="#6366f1" stroke-width="3"/>
+  <rect x="110" y="72" width="540" height="44" rx="14" fill="#1e293b"/>
+  <text x="140" y="100" fill="#a5b4fc" font-family="monospace" font-size="16" font-weight="bold">ACADEMIA GAMEDEV · ZERO IA GENERATIVA</text>
+  <!-- Pixel Heart + Sword Grid -->
+  <g transform="translate(185, 160)">
+    <rect x="24" y="0" width="48" height="24" fill="#f43f5e"/>
+    <rect x="120" y="0" width="48" height="24" fill="#f43f5e"/>
+    <rect x="0" y="24" width="192" height="48" fill="#f43f5e"/>
+    <rect x="24" y="72" width="144" height="24" fill="#e11d48"/>
+    <rect x="48" y="96" width="96" height="24" fill="#be123c"/>
+    <rect x="72" y="120" width="48" height="24" fill="#9f1239"/>
+  </g>
+  <!-- Code & FSM Panel -->
+  <g transform="translate(430, 160)">
+    <rect x="0" y="0" width="175" height="240" rx="10" fill="#131c31" stroke="#334155" stroke-width="2"/>
+    <rect x="20" y="26" width="96" height="12" rx="4" fill="#818cf8"/>
+    <rect x="20" y="54" width="132" height="10" rx="4" fill="#34d399"/>
+    <rect x="34" y="78" width="108" height="10" rx="4" fill="#94a3b8"/>
+    <rect x="34" y="102" width="120" height="10" rx="4" fill="#94a3b8"/>
+    <rect x="20" y="136" width="84" height="12" rx="4" fill="#f59e0b"/>
+    <rect x="20" y="164" width="130" height="10" rx="4" fill="#38bdf8"/>
+    <rect x="20" y="188" width="95" height="10" rx="4" fill="#6366f1"/>
+  </g>
+  <!-- Right Color Swatch Dock -->
+  <rect x="690" y="72" width="160" height="396" rx="16" fill="#0f172a" stroke="#334155" stroke-width="3"/>
+  <rect x="720" y="108" width="100" height="44" rx="8" fill="#6366f1"/>
+  <rect x="720" y="168" width="100" height="44" rx="8" fill="#10b981"/>
+  <rect x="720" y="228" width="100" height="44" rx="8" fill="#f59e0b"/>
+  <rect x="720" y="288" width="100" height="44" rx="8" fill="#f43f5e"/>
+  <rect x="720" y="348" width="100" height="44" rx="8" fill="#38bdf8"/>
+  <text x="724" y="428" fill="#94a3b8" font-family="monospace" font-size="13">16-COLOR PAL</text>
+</svg>

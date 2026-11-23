@@ -309,6 +309,31 @@ function renderApp(opts = {}) {
   }
 }
 
+function applySidebarDomState() {
+  const sidebar = document.getElementById("app-sidebar");
+  if (!sidebar) return false;
+  sidebar.classList.toggle("is-collapsed", Boolean(state.sidebarCollapsed));
+  sidebar.classList.toggle("translate-x-0", Boolean(state.mobileSidebarOpen));
+  sidebar.classList.toggle("shadow-2xl", Boolean(state.mobileSidebarOpen));
+  sidebar.classList.toggle("-translate-x-full", !state.mobileSidebarOpen);
+
+  const btn = document.getElementById("sidebar-collapse-btn");
+  if (btn) {
+    btn.classList.toggle("rotate-180", Boolean(state.sidebarCollapsed));
+    btn.setAttribute("aria-label", state.sidebarCollapsed ? "Abrir barra lateral" : "Recolher barra lateral");
+  }
+
+  const backdrop = document.getElementById("mobile-sidebar-backdrop");
+  if (backdrop) {
+    backdrop.setAttribute("aria-hidden", String(!state.mobileSidebarOpen));
+    backdrop.classList.toggle("opacity-100", Boolean(state.mobileSidebarOpen));
+    backdrop.classList.toggle("pointer-events-auto", Boolean(state.mobileSidebarOpen));
+    backdrop.classList.toggle("opacity-0", !state.mobileSidebarOpen);
+    backdrop.classList.toggle("pointer-events-none", !state.mobileSidebarOpen);
+  }
+  return true;
+}
+
 function navigateTo(page, opts = {}) {
   state.mobileSidebarOpen = false;
   state.notificationsOpen = false;
@@ -680,7 +705,7 @@ function openEditProjectModal(projectId) {
 
           <div>
             <label for="ep-cover-url" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">URL ou caminho da imagem de capa principal</label>
-            <input id="ep-cover-url" type="text" value="${escapeHtml(runtime.editProjectDraft.cover)}" placeholder="/src/assets/images/... ou https://..." class="w-full px-3 py-2 rounded-lg dm-surface text-xs" />
+            <input id="ep-cover-url" type="text" value="${escapeHtml(runtime.editProjectDraft.cover)}" placeholder="./assets/art/... ou https://..." class="w-full px-3 py-2 rounded-lg dm-surface text-xs" />
           </div>
 
           <div id="ep-gallery-list">
@@ -1192,19 +1217,19 @@ function bindGlobalEvents() {
     if (action === "toggle-sidebar-collapse") {
       state.sidebarCollapsed = !state.sidebarCollapsed;
       savePreferences();
-      renderApp();
+      if (!applySidebarDomState()) renderApp();
       return;
     }
 
     if (action === "open-mobile-sidebar") {
       state.mobileSidebarOpen = true;
-      renderApp();
+      if (!applySidebarDomState()) renderApp();
       return;
     }
 
     if (action === "close-mobile-sidebar") {
       state.mobileSidebarOpen = false;
-      renderApp();
+      if (!applySidebarDomState()) renderApp();
       return;
     }
 
@@ -1399,7 +1424,9 @@ function bindGlobalEvents() {
     if (action === "clear-feed-img") {
       runtime.draftFeedImage = "";
       const wrap = document.getElementById("feed-image-preview-wrap");
+      const slot = document.getElementById("feed-image-preview-slot");
       const input = document.getElementById("feed-img-input");
+      if (slot) slot.innerHTML = "";
       if (wrap) wrap.classList.add("hidden");
       if (input) input.value = "";
       return;
@@ -1797,9 +1824,15 @@ function bindGlobalEvents() {
     if (el.id === "feed-img-input" && el.files?.[0]) {
       runtime.draftFeedImage = await compressImageFile(el.files[0], 1200, 760, 0.82);
       const wrap = document.getElementById("feed-image-preview-wrap");
-      const preview = document.getElementById("feed-image-preview");
-      if (preview && wrap) {
-        preview.src = runtime.draftFeedImage;
+      const slot = document.getElementById("feed-image-preview-slot");
+      if (slot && wrap) {
+        slot.innerHTML = "";
+        const img = document.createElement("img");
+        img.id = "feed-image-preview";
+        img.src = runtime.draftFeedImage;
+        img.alt = "Prévia da imagem";
+        img.className = "w-full max-h-64 object-cover rounded-xl border border-slate-200 dark:border-slate-800";
+        slot.appendChild(img);
         wrap.classList.remove("hidden");
       }
       return;

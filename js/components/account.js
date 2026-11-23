@@ -156,7 +156,7 @@ export function renderProfileView(isPublic = false) {
 
   const l = state.lang;
   const isMe = !isPublic || (state.user && sanitizeKey(profile.username) === sanitizeKey(state.user.username));
-  const bannerUrl = profile.banner || state.defaultBanners[0] || "/src/assets/images/hero_indie_studio_1795401148551.jpg";
+  const bannerUrl = profile.banner || state.defaultBanners[0] || "./assets/art/studio-banner.svg";
   const myProjects = state.projects.filter(
     (p) =>
       p.creator === profile.name ||
@@ -501,6 +501,37 @@ export function renderSettingsView() {
           ${toggleRow("gray", "Escala de Cinza", "Remove saturação cromática da interface")}
           ${toggleRow("invert", "Inverter Cores", "Aplica inversão cromática de alto impacto")}
           ${toggleRow("sr", "Otimizar para Leitor de Tela (Cegueira)", "Anuncia trocas de tela e move foco automaticamente")}
+        </div>
+      </section>
+
+      <!-- GitHub & GitHub Pages Integration -->
+      <section class="dm-surface rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="font-display font-bold text-base">Integração GitHub & GitHub Pages</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Pronto para publicação estática via GitHub Actions (<code>.github/workflows/deploy-pages.yml</code>) com Firebase + cache local.
+            </p>
+          </div>
+          <a href="https://github.com/ItaSla/dreamore-plus" target="_blank" rel="noopener noreferrer"
+            class="px-3.5 py-2 rounded-xl dm-surface-alt hover:border-indigo-500 text-xs font-semibold inline-flex items-center gap-2 transition-colors">
+            ${icon("github", 15)}
+            <span>ItaSla/dreamore-plus</span>
+          </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="dm-surface-alt rounded-xl p-3.5">
+            <div class="text-slate-500 dark:text-slate-400">Modo de Dados</div>
+            <div class="font-semibold mt-0.5">${window.location.hostname.endsWith("github.io") ? "GitHub Pages (Estático + Firebase)" : "Servidor Express + Firebase"}</div>
+          </div>
+          <div class="dm-surface-alt rounded-xl p-3.5">
+            <div class="text-slate-500 dark:text-slate-400">Build Estático</div>
+            <div class="font-mono-num font-semibold mt-0.5">npm run build:pages</div>
+          </div>
+          <div class="dm-surface-alt rounded-xl p-3.5">
+            <div class="text-slate-500 dark:text-slate-400">Arte & Mídia</div>
+            <div class="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">100% Vetorial / Zero IA</div>
+          </div>
         </div>
       </section>
 

@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Eastwood";
-  src: url("/assets/fonts/eastwood.ttf") format("truetype");
+  src: url("../assets/fonts/eastwood.ttf") format("truetype");
   font-weight: 400 900;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "Edd's Font";
-  src: url("/assets/fonts/edds.ttf") format("truetype");
+  src: url("../assets/fonts/edds.ttf") format("truetype");
   font-weight: 400 800;
   font-style: normal;
   font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: "Edds";
-  src: url("/assets/fonts/edds.ttf") format("truetype");
+  src: url("../assets/fonts/edds.ttf") format("truetype");
   font-weight: 400 800;
   font-style: normal;
   font-display: swap;

@@ -19,11 +19,24 @@ const ALL_GENRES = [
 ];
 
 const DEFAULT_BANNERS = [
-  "/src/assets/images/hero_indie_studio_1795401148551.jpg",
-  "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
-  "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
-  "/src/assets/images/banner_pixel_workshop_1795401149532.jpg"
+  "./assets/art/studio-banner.svg",
+  "./assets/art/cyberpunk-skyline.svg",
+  "./assets/art/folklore-eclipse.svg",
+  "./assets/art/pixel-workshop.svg"
 ];
+
+const LEGACY_ASSET_MAP = {
+  "/src/assets/images/hero_indie_studio_1795401148551.jpg": "./assets/art/studio-banner.svg",
+  "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg": "./assets/art/cyberpunk-skyline.svg",
+  "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg": "./assets/art/folklore-eclipse.svg",
+  "/src/assets/images/cover_beatemup_hero_1795401149084.jpg": "./assets/art/beatemup-arcade.svg",
+  "/src/assets/images/banner_pixel_workshop_1795401149532.jpg": "./assets/art/pixel-workshop.svg"
+};
+
+function sanitizeLegacyAsset(val) {
+  if (typeof val !== "string") return val;
+  return LEGACY_ASSET_MAP[val] || val;
+}
 
 function hashPassword(pw) {
   return crypto.createHash("sha256").update("dreamore:" + String(pw || "")).digest("hex");
@@ -56,7 +69,7 @@ function createInitialData() {
       donated: 1450.0,
       goal: 10000.0,
       colors: ["#1e1b4b", "#be123c"],
-      cover: "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      cover: "./assets/art/cyberpunk-skyline.svg",
       synopsis: {
         pt: "Após passar por diversos eventos envolvendo fantasmas do passado, Túlio Parker deve enfrentar novos inimigos para manter a paz entre o Delta e a Terra, confrontando o Deltériano Maximus.",
         en: "After going through several events involving ghosts from the past, Túlio Parker must face new enemies to maintain peace between Delta and Earth, confronting the Delterian Maximus.",
@@ -90,8 +103,8 @@ function createInitialData() {
       donated: 2820.0,
       goal: 6000.0,
       colors: ["#064e3b", "#16a34a"],
-      cover: "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
-      playableDemo: { title: "Edd Contra o Mundo", ver: "Demo 0.1", file: "/edd_contra_o_mundo.html" },
+      cover: "./assets/art/beatemup-arcade.svg",
+      playableDemo: { title: "Edd Contra o Mundo", ver: "Demo 0.1", file: "./edd_contra_o_mundo.html" },
       synopsis: {
         pt: "Após se revoltar com o fim do refrigerante de Bacon, Edd finalmente começa o seu plano de conclusão contra o Mundo: se ele não puder ser feliz, ninguém será.",
         en: "After revolting over the end of Bacon Soda, Edd finally begins his ultimate plan against the World—if he can't be happy, nobody will.",
@@ -123,7 +136,7 @@ function createInitialData() {
       donated: 2350.0,
       goal: 15000.0,
       colors: ["#3f1d0b", "#ea580c"],
-      cover: "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      cover: "./assets/art/folklore-eclipse.svg",
       synopsis: {
         pt: "O mundo caiu em desgraça após o eclipse que dividiu a América do Sul em 13 ilhas ao redor de um vulcão ancestral, despertando criaturas do folclore em formas monstruosas.",
         en: "The world fell into ruin after an eclipse split South America into 13 islands around an ancient volcano, awakening folklore creatures in monstrous forms.",
@@ -156,7 +169,7 @@ function createInitialData() {
       donated: 1890.0,
       goal: 15000.0,
       colors: ["#090d16", "#334155"],
-      cover: "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      cover: "./assets/art/cyberpunk-skyline.svg",
       synopsis: {
         pt: "Alterne entre a Gotham clássica e a Neo-Gotham futurista neste Metroidvania interconectado repleto de gadgets, investigação e chefes icônicos.",
         en: "Switch between classic Gotham and futuristic Neo-Gotham in this interconnected Metroidvania packed with gadgets, detective work, and iconic bosses.",
@@ -382,7 +395,7 @@ function createInitialData() {
       location: "São Paulo, Brasil",
       site: "https://dreamore.dev",
       photo: "",
-      banner: "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+      banner: "./assets/art/studio-banner.svg",
       provider: "local",
       pwHash: hashPassword("dreamore123"),
       socials: { github: "https://github.com/ItaSla", itch: "https://itch.io", youtube: "" },
@@ -400,7 +413,7 @@ function createInitialData() {
       location: "Brasil",
       site: "https://dreamore.dev",
       photo: "",
-      banner: "/src/assets/images/banner_pixel_workshop_1795401149532.jpg",
+      banner: "./assets/art/pixel-workshop.svg",
       provider: "local",
       pwHash: hashPassword("dreamore123"),
       socials: { github: "", youtube: "", artstation: "" },
@@ -418,7 +431,7 @@ function createInitialData() {
       location: "Belo Horizonte, MG",
       site: "",
       photo: "",
-      banner: "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      banner: "./assets/art/cyberpunk-skyline.svg",
       provider: "local",
       pwHash: hashPassword("dreamore123"),
       socials: { twitter: "@tulioparker_dev", itch: "https://itch.io" },
@@ -436,7 +449,7 @@ function createInitialData() {
       location: "Minas Gerais, Brasil",
       site: "",
       photo: "",
-      banner: "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      banner: "./assets/art/folklore-eclipse.svg",
       provider: "local",
       pwHash: hashPassword("dreamore123"),
       socials: { instagram: "@caua_maxakali" },
@@ -457,7 +470,7 @@ function createInitialData() {
       tag: "Build Jogável",
       milestone: "Demo 0.1 liberada no navegador",
       content: "Acabamos de publicar a primeira versão jogável de Edd Contra o Mundo direto no navegador! Todo o traço foi animado quadro a quadro pela equipe, sem nenhum uso de IA generativa. Testem os combos e mandem feedback nos comentários.",
-      image: "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
+      image: "./assets/art/beatemup-arcade.svg",
       likes: 64,
       comments: [
         { author: "Mariana Costa", text: "O feedback visual dos golpes e o estilo cartoon ficaram impecáveis!", date: "Hoje, 11:40" }
@@ -474,7 +487,7 @@ function createInitialData() {
       tag: "Arte & Atmosfera",
       milestone: "Iluminação do Eclipse Solar nas 13 Ilhas",
       content: "Finalizamos o conceito visual principal do vulcão central e das 13 ilhas flutuantes sob o eclipse. Também concluímos as gravações de percussão orgânica na mata para a trilha dinâmica.",
-      image: "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+      image: "./assets/art/folklore-eclipse.svg",
       likes: 88,
       comments: [],
       createdAt: "2026-11-20T18:10:00.000Z"
@@ -489,7 +502,7 @@ function createInitialData() {
       tag: "Progresso Técnico",
       milestone: "Física de balanço vertical e tilemap noturno",
       content: "Prototipamos o novo deslocamento pelos telhados de Delta com transição de câmera suave em 60fps. Buscamos mais um Sound Designer para os impactos dimensionais!",
-      image: "/src/assets/images/banner_cyberpunk_skyline_1795401147995.jpg",
+      image: "./assets/art/cyberpunk-skyline.svg",
       likes: 53,
       comments: [
         { author: "Bruno Banner", text: "Posso ajudar com foley de impacto e ambiência urbana!", date: "Ontem, 20:12" }
@@ -506,7 +519,7 @@ function createInitialData() {
       tag: "Atualização",
       milestone: "Nova identidade visual, Feed Unificado & Academia GameDev",
       content: "Seja bem-vindo à nova fase da DREAMORE+! Substituímos os antigos devlogs isolados por este Feed contínuo para você acompanhar avanços em imagens e builds, além do novo menu Ajuda a GameDevs com mentorias reais.",
-      image: "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+      image: "./assets/art/studio-banner.svg",
       likes: 112,
       comments: [],
       createdAt: "2026-11-22T09:00:00.000Z"
@@ -536,7 +549,7 @@ function createInitialData() {
       id: "grp-indie-br",
       name: "Estúdios Indie Brasil",
       desc: "Troca de feedback de gameplay, playtests semanais e parcerias.",
-      photo: "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+      photo: "./assets/art/studio-banner.svg",
       owner: "JoseWillian",
       moderators: ["JoseWillian", "JoaoPedro"],
       mods: ["JoaoPedro"],
@@ -608,7 +621,7 @@ function createInitialData() {
         duration: "24:15",
         level: "Iniciante",
         topic: "Gameplay & Colisão",
-        thumbnail: "/src/assets/images/cover_beatemup_hero_1795401149084.jpg",
+        thumbnail: "./assets/art/beatemup-arcade.svg",
         description: "Passo a passo construindo loop de animação, caixas de colisão AABB, knockback e efeitos visuais de impacto.",
         chapters: ["00:00 Loop 60fps", "06:40 Hitbox vs Hurtbox", "14:20 Hitstop & Screen Shake", "20:00 Polimento"]
       },
@@ -619,7 +632,7 @@ function createInitialData() {
         duration: "31:40",
         level: "Intermediário",
         topic: "Direção de Arte",
-        thumbnail: "/src/assets/images/banner_folklore_eclipse_1795401148169.jpg",
+        thumbnail: "./assets/art/folklore-eclipse.svg",
         description: "Como guiar o olhar do jogador usando contraste cromático, camadas de parallax e sons orgânicos sem tutoriais invasivos.",
         chapters: ["00:00 Contraste de Valores", "09:15 Parallax em 5 Camadas", "19:30 Áudio Adaptativo"]
       },
@@ -630,7 +643,7 @@ function createInitialData() {
         duration: "19:50",
         level: "Todos os Níveis",
         topic: "UX & Acessibilidade",
-        thumbnail: "/src/assets/images/hero_indie_studio_1795401148551.jpg",
+        thumbnail: "./assets/art/studio-banner.svg",
         description: "Como projetar menus responsivos, suporte a daltonismo, legendas configuráveis e navegação completa por teclado/gamepad.",
         chapters: ["00:00 Hierarquia no HUD", "07:10 Contraste & Daltonismo", "13:50 Navegação por Teclado"]
       }
@@ -771,6 +784,16 @@ class DreamoreDatabase {
 
   migrateStore() {
     let changed = false;
+    if (Array.isArray(this.data.defaultBanners)) {
+      this.data.defaultBanners = this.data.defaultBanners.map((b) => {
+        const next = sanitizeLegacyAsset(b);
+        if (next !== b) changed = true;
+        return next;
+      });
+    } else {
+      this.data.defaultBanners = [...DEFAULT_BANNERS];
+      changed = true;
+    }
     (this.data.projects || []).forEach((p) => {
       const def = PROJECT_DEFAULT_META[p.id] || {};
       if (!p.icon) {
@@ -781,9 +804,26 @@ class DreamoreDatabase {
         p.releaseDate = def.releaseDate || `${p.year || 2028}-12-01`;
         changed = true;
       }
+      if (p.cover) {
+        const nextCover = sanitizeLegacyAsset(p.cover);
+        if (nextCover !== p.cover) {
+          p.cover = nextCover;
+          changed = true;
+        }
+      }
+      if (p.playableDemo?.file === "/edd_contra_o_mundo.html") {
+        p.playableDemo.file = "./edd_contra_o_mundo.html";
+        changed = true;
+      }
       if (!Array.isArray(p.gallery)) {
         p.gallery = p.cover ? [p.cover] : [];
         changed = true;
+      } else {
+        p.gallery = p.gallery.map((g) => {
+          const next = sanitizeLegacyAsset(g);
+          if (next !== g) changed = true;
+          return next;
+        });
       }
     });
     (this.data.users || []).forEach((u, idx) => {
@@ -792,15 +832,54 @@ class DreamoreDatabase {
         u.lastSeen = Date.now() - idx * 30000;
         changed = true;
       }
+      if (u.banner) {
+        const nextBanner = sanitizeLegacyAsset(u.banner);
+        if (nextBanner !== u.banner) {
+          u.banner = nextBanner;
+          changed = true;
+        }
+      }
+      if (u.photo) {
+        const nextPhoto = sanitizeLegacyAsset(u.photo);
+        if (nextPhoto !== u.photo) {
+          u.photo = nextPhoto;
+          changed = true;
+        }
+      }
       if (!u.socials) {
         u.socials = {};
         changed = true;
+      }
+    });
+    (this.data.feedPosts || []).forEach((fp) => {
+      if (fp.image) {
+        const nextImg = sanitizeLegacyAsset(fp.image);
+        if (nextImg !== fp.image) {
+          fp.image = nextImg;
+          changed = true;
+        }
+      }
+    });
+    (this.data.gamedevHelp?.videos || []).forEach((v) => {
+      if (v.thumbnail) {
+        const nextThumb = sanitizeLegacyAsset(v.thumbnail);
+        if (nextThumb !== v.thumbnail) {
+          v.thumbnail = nextThumb;
+          changed = true;
+        }
       }
     });
     (this.data.groups || []).forEach((g) => {
       if (g.img && !g.photo) {
         g.photo = g.img;
         changed = true;
+      }
+      if (g.photo) {
+        const nextPhoto = sanitizeLegacyAsset(g.photo);
+        if (nextPhoto !== g.photo) {
+          g.photo = nextPhoto;
+          changed = true;
+        }
       }
       if (!Array.isArray(g.moderators)) {
         const list = [g.owner, ...(Array.isArray(g.mods) ? g.mods : [])].filter(Boolean);
@@ -1262,4 +1341,4 @@ class DreamoreDatabase {
   }
 }
 
-module.exports = { DreamoreDatabase, keyOf };
+module.exports = { DreamoreDatabase, keyOf, createInitialData };

@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./styles/main.css --minify && npx esbuild js/firebase-entry.js --bundle --format=esm --outfile=js/vendor/firebase-sdk.js --minify && node --check server.js && node --check database/database.js",
-    "lint": "npx eslint server.js database/database.js js firestore.rules"
+    "build": "node scripts/generate-static-seed.mjs && npx @tailwindcss/cli -i ./styles/tailwind-input.css -o ./styles/main.css --minify && npx esbuild js/firebase-entry.js --bundle --format=esm --outfile=js/vendor/firebase-sdk.js --minify && node --check server.js && node --check database/database.js",
+    "build:pages": "npm run build && node scripts/build-pages.mjs",
+    "lint": "npx eslint server.js database/database.js js scripts firestore.rules"
   },
   "dependencies": {
     "@eslint/js": "^10.0.1",

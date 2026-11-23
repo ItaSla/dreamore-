@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060916"/>
+      <stop offset="60%" stop-color="#17153b"/>
+      <stop offset="100%" stop-color="#311042"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#f43f5e"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <!-- Moon / Crescent -->
+  <circle cx="760" cy="115" r="46" fill="#fde68a" opacity="0.9"/>
+  <circle cx="778" cy="105" r="42" fill="#0d0d29"/>
+  <!-- Distant skyline silhouette -->
+  <g fill="#121232">
+    <rect x="20" y="210" width="76" height="330"/>
+    <rect x="110" y="165" width="90" height="375"/>
+    <rect x="220" y="235" width="65" height="305"/>
+    <rect x="305" y="130" width="110" height="410"/>
+    <rect x="440" y="195" width="84" height="345"/>
+    <rect x="550" y="150" width="96" height="390"/>
+    <rect x="670" y="220" width="74" height="320"/>
+    <rect x="765" y="175" width="115" height="365"/>
+  </g>
+  <!-- Foreground geometric towers with lit windows -->
+  <rect x="70" y="240" width="104" height="300" fill="#1b1c40" stroke="#312e81" stroke-width="2"/>
+  <rect x="90" y="264" width="16" height="10" fill="#38bdf8"/>
+  <rect x="120" y="264" width="16" height="10" fill="#38bdf8"/>
+  <rect x="90" y="294" width="16" height="10" fill="#f43f5e"/>
+  <rect x="120" y="324" width="16" height="10" fill="#38bdf8"/>
+
+  <rect x="355" y="175" width="130" height="365" fill="#17193a" stroke="#4338ca" stroke-width="2"/>
+  <rect x="415" y="110" width="10" height="65" fill="#6366f1"/>
+  <circle cx="420" cy="106" r="5" fill="#f43f5e"/>
+  <rect x="380" y="205" width="80" height="8" fill="#818cf8"/>
+  <rect x="380" y="228" width="80" height="8" fill="#38bdf8"/>
+  <rect x="380" y="251" width="80" height="8" fill="#818cf8"/>
+  <rect x="380" y="274" width="44" height="8" fill="#f43f5e"/>
+
+  <rect x="615" y="220" width="115" height="320" fill="#1b1c40" stroke="#be123c" stroke-width="2"/>
+  <rect x="638" y="246" width="22" height="12" fill="#f43f5e"/>
+  <rect x="678" y="246" width="22" height="12" fill="#f43f5e"/>
+  <rect x="638" y="278" width="22" height="12" fill="#38bdf8"/>
+  <rect x="678" y="310" width="22" height="12" fill="#f43f5e"/>
+
+  <!-- Suspension Bridge Lines -->
+  <path d="M 0 430 Q 480 350 960 430" fill="none" stroke="url(#glow)" stroke-width="4"/>
+  <line x1="0" y1="448" x2="960" y2="448" stroke="#6366f1" stroke-width="6"/>
+  <rect x="0" y="454" width="960" height="86" fill="#090c1a"/>
+</svg>
